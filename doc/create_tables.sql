@@ -61,5 +61,5 @@ create table status_report
    optime           date
 );
 
-alter table status_report add constraint pk_status_report primary key(msg_id);
+--alter table status_report add constraint pk_status_report primary key(msg_id);
 
