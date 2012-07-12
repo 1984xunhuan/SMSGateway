@@ -33,6 +33,7 @@ make_dist()
     mkdir -p $PROJECT_DIR/InstallPackage/SMSSrv/etc
     
     cp -R $PROJECT_DIR/bin/*     $PROJECT_DIR/InstallPackage/SMSSrv/bin/ 
+    cp -R $PROJECT_DIR/lib/*     $PROJECT_DIR/InstallPackage/SMSSrv/lib/
     cp -R $PROJECT_DIR/lib_dep/* $PROJECT_DIR/InstallPackage/SMSSrv/lib/
     cp -R $PROJECT_DIR/etc/*     $PROJECT_DIR/InstallPackage/SMSSrv/etc/
     
@@ -51,6 +52,36 @@ make_dist()
     echo "Generate Install Package Finish."
 }
 
+make_project()
+{
+    cd $PROJECT_DIR/build
+    
+    cmake ..
+    
+    make
+}
+
+make_clean()
+{
+    echo "Remove project temporary files."
+	
+    cd lib			   
+    
+    rm -fr `ls . | grep -v extends | grep -v oracle | grep -v log`
+    rm -fr $PROJECT_DIR/bin/* 2>/dev/null
+
+    CLEAN_DIR=$PROJECT_DIR
+		
+    if [ -d $CLEAN_DIR/lib ] && [ -d $CLEAN_DIR/bin ] && [ -d $CLEAN_DIR/build ]
+    then
+        rm $CLEAN_DIR/lib/* 2>/dev/null
+        rm $CLEAN_DIR/bin/* 2>/dev/null
+        rm -r $CLEAN_DIR/build/* 2>/dev/null
+    fi
+    
+    echo "clean finish."
+}
+
 
 if [ $# -gt 0 ] 
 then
@@ -60,10 +91,22 @@ then
 		usage
 	fi
 	
+	if [ "$1" = "all" ] 
+	then
+		make_project
+	fi
+	
+	if [ "$1" = "clean" ] 
+	then
+		make_clean
+	fi
+	
 	if [ "$1" = "dist" ] 
 	then
 		make_dist
 	fi
+else
+    make_project
 fi
 
 exit
