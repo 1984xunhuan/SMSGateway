@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+	  <system>
+	      <maxlogincount>5</maxlogincount>
+	  </system>
+	  
+    <database>
+        <username>sms</username>
+        <password>sms</password>
+        <connstr>192.168.1.222/orcl</connstr>
+    </database>
+ <!--   
+    <gateway>
+    	  <ipaddr>192.168.1.51</ipaddr>
+    	  <port>7890</port>
+        <spid>417905</spid>
+        <password>7rvzhjmPnl72</password>
+        <serviceid>AHB0090401</serviceid>
+        <spno>106570200</spno>
+    </gateway>
+    -->
+     
+    <gateway>
+    	  <ipaddr>192.168.1.51</ipaddr>
+    	  <port>7890</port>
+        <spid>044022</spid>
+        <password>0555</password>
+        <serviceid>9999</serviceid>
+        <spno>044022</spno>
+        <version>18</version>
+    </gateway>
+    
+</config>
