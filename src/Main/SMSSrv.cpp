@@ -321,6 +321,24 @@ int SMSSrv::Run()
 int SMSSrv::Logout()
 {
     LOG_DEBUG("%s","logout");
+    
+    pMsgService = ServiceFactory::GetMessageService(CMPP_TERMINATE);
+	  
+	  if(pMsgService != NULL)
+	  {
+	  	  ByteStream bs;
+	  	  
+	  	  pMsgService->SetSocket(sockfd); 	  
+	  	  pMsgService->SetMsgFormISMG(false);
+	  	  
+	      pMsgService->DoMessage(bs);
+	      
+	      delete pMsgService;
+	      
+	      pMsgService = NULL;
+	  }
+	  
+	  usleep(500);
 	  
     close(sockfd);
 	  

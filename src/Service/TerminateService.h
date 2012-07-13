@@ -49,6 +49,13 @@ public:
 	   * @return int
 	   */
     virtual int InitMessageHeader();
+    
+    /**
+	   * @brief deal with business.
+	   * @param[in] ByteStream& mByteStream
+	   * @return int
+	   */
+    virtual int DoBusiness(ByteStream& mByteStream);
 };
 
 #endif

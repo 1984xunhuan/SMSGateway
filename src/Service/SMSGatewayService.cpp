@@ -52,17 +52,19 @@ int SMSGatewayService::ReceiveMessage(ByteStream& bs)
     
     type = 0;
     
+    SetMsgFormISMG(false);
+    
     if(ret < 0) 
     {
         LOG_DEBUG("%s","select");
     }
     else if(ret == 0)
     {
-        LOG_DEBUG("%s","查询需要下发的短信"); 
+        LOG_DEBUG("%s","check send_message table."); 
         
         if(GetMessageFromDB() == -1)
         {
-            //type = CMPP_ACTIVE_TEST;
+            type = CMPP_ACTIVE_TEST;
         }
         
         usleep(500);

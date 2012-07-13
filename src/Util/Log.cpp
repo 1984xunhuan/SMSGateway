@@ -24,6 +24,23 @@ typedef enum
     TYPE_WARN
 }LOG_TYPE;
 
+int write_file(char* msg)
+{
+	FILE *fp;
+	int result;
+
+	fp=fopen("../log/SMSSrv.log","a+");
+
+	if(fp==NULL)return -1;
+
+	result = fwrite(msg,sizeof(char),strlen(msg),fp);
+
+	fclose(fp);
+
+	return result;
+}
+
+
 
 void HexData(std::ostream& os, const char* p, const unsigned int len)
 {
@@ -64,6 +81,7 @@ void do_log(LOG_TYPE type, const char* buf, unsigned int len, const char* file,
     ss<<line;
     ss<<"] - ";
     ss<<log_buf;
+    ss<<"\n";
 
     if(buf != NULL && len > 0)
     {
@@ -76,23 +94,30 @@ void do_log(LOG_TYPE type, const char* buf, unsigned int len, const char* file,
     {
         case TYPE_INFO:
         {
-            cout<<ss.str()<<endl;
+            cout<<ss.str();
+            write_file((char*)ss.str().c_str());
             
             break;
         }
         case TYPE_ERROR:
         {
-            cout<<ss.str()<<endl;
+            cout<<ss.str();
+            write_file((char*)ss.str().c_str());
+            
             break;
         }
         case TYPE_WARN:
         {
-            cout<<ss.str()<<endl;
+            cout<<ss.str();
+            write_file((char*)ss.str().c_str());
+            
             break;
         }
         case TYPE_DEBUG:
         {
-            cout<<ss.str()<<endl;
+            cout<<ss.str();
+            write_file((char*)ss.str().c_str());
+            
             break;
         }
     }

@@ -97,7 +97,7 @@ public:
     	  //
     	  InitMessageHeader();
     	  //
-    	  if(IsMsgFormISMG())
+    	  if(!IsMsgFormISMG())
 			  {
             sequence_id  = getsequenceid();
         }
