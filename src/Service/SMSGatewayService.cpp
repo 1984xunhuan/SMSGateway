@@ -115,7 +115,7 @@ unsigned int SMSGatewayService::ParseMessage()
     
     dec_to_hex(hex, type);
     
-    LOG_DEBUG("dec_type=%u, hex_type= %s",type, hex);
+    LOG_DEBUG("dec_type=%u, hex_type= %s", type, hex);
     
     return type;
 }
@@ -127,37 +127,22 @@ unsigned int SMSGatewayService::ParseMessage()
  */
 int SMSGatewayService::GetMessageFromDB()
 {
-	  int iRet = -1;
+    int iRet = -1;
+    
     try
     {
-    	  /**
-    	  create table send_message
-				(
-				   send_id      varchar2(20) not null,--信息 id
-				   phone        varchar2(20) not null,--电话
-				   msg_level    number(1) default 9,
-				   content      varchar2(1000),--内容
-				   valid_time   date,--存活有效期
-				   at_time      date,--定时发送时间 
-				   wap_push_url varchar2(1000),--wappush地址
-				   sms_type     number(1) default 0,--短信 类型
-				   send_time    date,--发送 时间
-				   optime       date,--添加时间
-				   done         varchar2(2) --处理状态 
-				);
-    	  */
+        DAO dao(false, sDBUser, sDBPwd, sDBConnStr);
     	  
-    	  DAO dao(true, sDBUser, sDBPwd, sDBConnStr);
-    	  
-        string sSql = "SELECT send_id, phone, sms_type, msg_level, content, wap_push_url, status_report, valid_time, at_time FROM send_message where done=0 order by msg_level desc";
+        //string sSql = "SELECT send_id, phone, sms_type, msg_level, content, wap_push_url, status_report, valid_time, at_time FROM send_message WHERE done=0 ORDER BY msg_level DESC ";
+        string sSql = "SELECT send_id, phone, sms_type, msg_level, content, wap_push_url, status_report, valid_time, at_time FROM send_message WHERE done=0 AND rownum<=1 FOR UPDATE";
         
         LOG_DEBUG("%s",sSql.c_str());
         
-    	  ResultSet* rs = dao.Query(sSql);
+        ResultSet* rs = dao.Query(sSql);
         
         while(rs != NULL && rs->next())
         {
-        	  string sSendId     = rs->getString(1);
+            string sSendId     = rs->getString(1);
             string sPhone      = rs->getString(2);
             int    iSmsType    = rs->getInt(3);
             int    iMsgLevel   = rs->getInt(4);      
@@ -194,7 +179,7 @@ int SMSGatewayService::GetMessageFromDB()
             if(iCntLen > 140)
             {
 		            iTotal   = (iCntLen + iMaxSMSLen - 1) / iMaxSMSLen;
-				        iLastLen = iCntLen % iMaxSMSLen;
+                iLastLen = iCntLen % iMaxSMSLen;
 		        }
             
             SubmitService mSubmitService;
@@ -205,8 +190,8 @@ int SMSGatewayService::GetMessageFromDB()
             
             if(iTotal > 1)
             {
-            	  if(iSmsType == 1 || iSmsType == 3)
-            	  {
+                if(iSmsType == 1 || iSmsType == 3)
+                {
                     iUdhi = 1;
                 }
                 
@@ -227,11 +212,12 @@ int SMSGatewayService::GetMessageFromDB()
 		            	  if(iSmsType == 0)
 		            	  { 
 		            	  	   stringstream ss;
-                         ss<<"[";
-                         ss<<i;
-                         ss<<"/";
-                         ss<<iTotal;
-                         ss<<"]";
+                               
+		            	  	   ss<<"[";
+                               ss<<i;
+                               ss<<"/";
+                               ss<<iTotal;
+                               ss<<"]";
                          
 		            	       sCnt += ss.str();
 		            	  }
@@ -256,7 +242,9 @@ int SMSGatewayService::GetMessageFromDB()
         }
         
         dao.CloseResultSet(rs);
-        //dao.Close();
+        
+        dao.Commit();
+        dao.Close();
     }
     catch(SQLException ex)
     {

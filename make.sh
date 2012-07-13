@@ -3,6 +3,9 @@
 #current path
 PROJECT_DIR=`pwd`
 
+#version
+VERSION=1.0.0
+
 usage()
 {
     printf "Usage of make.sh:\n"
@@ -24,7 +27,7 @@ make_dist()
     echo "============================================================"
     echo
     
-    echo "Copy File..."
+    echo "Copy files..."
     
     mkdir -p $PROJECT_DIR/InstallPackage/SMSSrv
     mkdir -p $PROJECT_DIR/InstallPackage/SMSSrv/bin
@@ -32,24 +35,39 @@ make_dist()
     mkdir -p $PROJECT_DIR/InstallPackage/SMSSrv/lib
     mkdir -p $PROJECT_DIR/InstallPackage/SMSSrv/etc
     
-    cp -R $PROJECT_DIR/bin/*     $PROJECT_DIR/InstallPackage/SMSSrv/bin/ 
-    cp -R $PROJECT_DIR/lib/*     $PROJECT_DIR/InstallPackage/SMSSrv/lib/
-    cp -R $PROJECT_DIR/lib_dep/* $PROJECT_DIR/InstallPackage/SMSSrv/lib/
-    cp -R $PROJECT_DIR/etc/*     $PROJECT_DIR/InstallPackage/SMSSrv/etc/
+    if [ $(ls $PROJECT_DIR/bin/ | wc -l) -gt 0 ] 
+    then
+        cp -R $PROJECT_DIR/bin/*     $PROJECT_DIR/InstallPackage/SMSSrv/bin/
+    fi
+
+    if [ $(ls $PROJECT_DIR/lib/ | wc -l) -gt 0 ]
+    then
+        cp -R $PROJECT_DIR/lib/*     $PROJECT_DIR/InstallPackage/SMSSrv/lib/
+    fi
     
+    if [ $(ls $PROJECT_DIR/lib_dep/ | wc -l) -gt 0 ] 
+    then
+        cp -R $PROJECT_DIR/lib_dep/*	$PROJECT_DIR/InstallPackage/SMSSrv/lib/
+    fi
+
+    if [ $(ls $PROJECT_DIR/etc/ | wc -l) -gt 0 ]
+    then 
+        cp -R $PROJECT_DIR/etc/*     $PROJECT_DIR/InstallPackage/SMSSrv/etc/
+    fi
+
     rm -fr $PROJECT_DIR/InstallPackage/SMSSrv/lib/*.a
     
     
     find $PROJECT_DIR/InstallPackage/ -type d -name ".svn" | xargs rm -rf
        
-    echo "Generate Install Package..."
+    echo "Generate software install package..."
     cd $PROJECT_DIR/InstallPackage/
     
-    tar -zcf SMSSrv_1.0.0.tar.gz SMSSrv
+    tar -zcf SMSSrv_$VERSION\_`date +%Y%m%d`.tar.gz SMSSrv
     
     rm -fr SMSSrv
     
-    echo "Generate Install Package Finish."
+    echo "Generate software install package finish."
 }
 
 make_project()

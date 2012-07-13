@@ -217,9 +217,13 @@ int SMSSrv::Login()
 	      
 	      if(pMsgService->DoMessage(bs) == -1)
 	      {
+	    	  close(sockfd);
+	    	  
 	          InitSocket();
 	          
 	          Login();
+	          
+	          return -1;
 	      }
 	      
 	      delete pMsgService;
@@ -241,6 +245,8 @@ int SMSSrv::Login()
 	      	      }
 	      	  
 	              Login();
+	              
+	              return -1;
 	          }
 	      
 	          delete pMsgService;
@@ -275,9 +281,13 @@ int SMSSrv::Run()
 	  }
 	  else if(type == -1)
 	  {
+	       close(sockfd);
+	       
 	       InitSocket();
 	          
 	       Login();
+	       
+	       return -1;
 	  }
 	  
 	  pMsgService = ServiceFactory::GetMessageService(type);
@@ -304,9 +314,9 @@ int SMSSrv::Run()
  */
 int SMSSrv::Logout()
 {
-	  LOG_DEBUG("%s","logout");
+    LOG_DEBUG("%s","logout");
 	  
-	  close(sockfd);
+    close(sockfd);
 	  
     return 0;
 }
