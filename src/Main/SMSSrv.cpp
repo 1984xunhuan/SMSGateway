@@ -175,7 +175,7 @@ int SMSSrv::InitSocket()
 	  {
 		    LOG_ERROR("Socket Error: %s\a\n",strerror(errno));
 		    
-		    exit(1);
+		    return -1;
 	  }
 
 	  //³õÊ¼»¯socket
@@ -189,7 +189,7 @@ int SMSSrv::InitSocket()
 	  {
 		    LOG_ERROR("%s","Connect Error");
 		  
-		    exit(1);
+		    return -1;
 	  }
 
     return 0;
@@ -217,7 +217,10 @@ int SMSSrv::Login()
 	      
 	      if(pMsgService->DoMessage(bs) == -1)
 	      {
-	    	  close(sockfd);
+	      	  delete pMsgService;
+	          pMsgService = NULL;
+	      
+	    	    close(sockfd);
 	    	  
 	          InitSocket();
 	          
@@ -238,11 +241,14 @@ int SMSSrv::Login()
 	      
 	          if(pMsgService->DoMessage(bs) != 0)
 	          {
-	      	      if(iLoginCount >= iMaxLoginCount)
+	      	      if(iMaxLoginCount != -1 && iLoginCount >= iMaxLoginCount)
 	      	      {
 	      	          LOG_DEBUG("%s","Exceed the maximum number of times landing !!!");
 	      	          exit(1);
 	      	      }
+	      	      
+	      	      delete pMsgService;
+	              pMsgService = NULL;
 	      	  
 	              Login();
 	              

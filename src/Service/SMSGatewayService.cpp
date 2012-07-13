@@ -64,6 +64,8 @@ int SMSGatewayService::ReceiveMessage(ByteStream& bs)
         {
             //type = CMPP_ACTIVE_TEST;
         }
+        
+        usleep(500);
     }
     else 
     { 

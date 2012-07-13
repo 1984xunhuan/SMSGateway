@@ -42,7 +42,7 @@ int main(int argc, char** argv)
     {
         mSmsSrv.Run();
         
-        sleep(1);
+        usleep(100);
     }
     
     mSmsSrv.Logout();

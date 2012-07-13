@@ -35,6 +35,8 @@ int ConnectService::DoBusiness(ByteStream& mByteStream)
 	  if(write(sockfd, bs[0], bs.GetSize()) == -1)
 	  {
 		    LOG_DEBUG("Write Error: %s\n",strerror(errno));
+		    
+		    return -1;
 	  }
 	  
 	  unsigned char buf[1024];
